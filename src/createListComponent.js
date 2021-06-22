@@ -78,6 +78,7 @@ export type Props<T> = {|
   style?: Object,
   useIsScrolling: boolean,
   width: number | string,
+  ignoreScrollEvents?: boolean,
 |};
 
 type State = {|
@@ -123,6 +124,7 @@ type ValidateProps = (props: Props<any>) => void;
 const IS_SCROLLING_DEBOUNCE_INTERVAL = 150;
 
 const defaultItemKey = (index: number, data: any) => index;
+const noOp = () => { }
 
 // In DEV mode, this Set helps us only log a warning once per component instance.
 // This avoids spamming the console every time a render happens.
@@ -305,6 +307,7 @@ export default function createListComponent({
         style,
         useIsScrolling,
         width,
+        ignoreScrollEvents,
       } = this.props;
       const { isScrolling } = this.state;
 
@@ -312,7 +315,7 @@ export default function createListComponent({
       const isHorizontal =
         direction === 'horizontal' || layout === 'horizontal';
 
-      const onScroll = isHorizontal
+      const onScroll = ignoreScrollEvents ? noOp : isHorizontal
         ? this._onScrollHorizontal
         : this._onScrollVertical;
 
